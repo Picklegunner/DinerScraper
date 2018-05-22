@@ -31,7 +31,7 @@ def is_good_response(resp):
             and content_type is not None 
             and content_type.find('html') > -1)
 
-
+#TODO create update_database that skims all available recipes and adds to sql database
 def scrape_recipe(url):
 
     # Get html
@@ -51,9 +51,29 @@ def scrape_recipe(url):
         # Match regexs
         cal_search = calories_re.search(font_elements[i].text)
         cal_fat_search = calories_fat_re.search(font_elements[i].text)
-        # TODO replace first if statement with switch case and handle all nutrients here
-        if font_element.text.strip() in two_liners and font_elements[i + 1].text.strip() != "":
-            pass#print(font_elements[i].text + font_elements[i + 1].text)
+        stripped_element = font_element.text.strip()
+
+        if stripped_element in two_liners and font_elements[i + 1].text.strip() != "":
+            if stripped_element == "Serving Size":
+                pass
+            elif stripped_element == "Total Fat":
+                scraped_entry.total_fat = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Tot. Carb.":
+                scraped_entry.total_carb = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Sat. Fat":
+                scraped_entry.sat_fat = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Dietary Fiber":
+                scraped_entry.fiber = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Trans Fat":
+                scraped_entry.trans_fat = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Sugars":
+                scraped_entry.sugar = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Cholesterol":
+                scraped_entry.cholesterol = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'mg')
+            elif stripped_element == "Protein":
+                scraped_entry.protein = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'g')
+            elif stripped_element == "Sodium":
+                scraped_entry.sodium = Nutrient(re.sub('[^0-9\\.]','', font_elements[i + 1].text.strip()), 'mg')
         elif cal_fat_search: # Calories from Fat
             scraped_entry.calories_from_fat = cal_fat_search.group(1)
         elif cal_search: # Calories

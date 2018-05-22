@@ -19,7 +19,7 @@ class Nutrient:
         return self
 
     def get(self):
-        return (self.quantity, self.unit)
+        return [self.quantity, self.unit]
 
 class Entry:
 
@@ -44,15 +44,15 @@ class Entry:
         output = self.name + " - entry\n"
         output += "Calories {}\n".format(self.calories)
         output += "Calories from Fat {}\n".format(self.calories_from_fat)
-        output += "Total Fat {}\n".format(self.total_fat)
-        output += "  Saturated Fat {}\n".format(self.sat_fat)
-        output += "  Trans. Fat {}\n".format(self.trans_fat)
-        output += "Total Carbs {}\n".format(self.total_carb)
-        output += "  Fiber {}\n".format(self.fiber)
-        output += "  Sugars {}\n".format(self.sugar)
-        output += "Cholesterol {}\n".format(self.cholesterol)
-        output += "Protein {}\n".format(self.protein)
-        output += "Sodium {}".format(self.sodium)
+        output += "Total Fat {}\n".format(self.total_fat.get()[0])
+        output += "  Saturated Fat " + ''.join(self.sat_fat.get()) + "\n"
+        output += "  Trans. Fat " + ''.join(self.trans_fat.get()) + "\n"
+        output += "Total Carbs " + ''.join(self.total_carb.get()) + "\n"
+        output += "  Fiber " + ''.join(self.fiber.get()) + "\n"
+        output += "  Sugars " + ''.join(self.sugar.get()) + "\n"
+        output += "Cholesterol " + ''.join(self.cholesterol.get()) + "\n"
+        output += "Protein " + ''.join(self.protein.get()) + "\n"
+        output += "Sodium " + ''.join(self.sodium.get()) + "\n"
         return output
 
 
