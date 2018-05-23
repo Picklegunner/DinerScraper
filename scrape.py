@@ -32,7 +32,7 @@ def is_good_response(resp):
             and content_type.find('html') > -1)
 
 #TODO create update_database that skims all available recipes and adds to sql database
-def scrape_recipe(url):
+def scrape_recipe(url, name):
 
     # Get html
     raw_html = simple_get(url)
@@ -79,7 +79,7 @@ def scrape_recipe(url):
         elif cal_search: # Calories
             scraped_entry.calories = cal_search.group(1)
 
-    print(scraped_entry)
+        scraped_entry.name = name
 
     return scraped_entry
 
@@ -88,5 +88,30 @@ def log_error(e):
     #Sometime save this to a log file
     print(e)
 
+def gather_links(url):
 
-scrape_recipe("http://nutrition.umd.edu/label.aspx?locationNum=16&locationName=%3cfont+style%3d%22color%3aRed%22%3eSouth+Campus%3c%2ffont%3e&dtdate=05%2f04%2f2018&RecNumAndPort=119369*1")
+        # Get html
+    #raw_html = simple_get(url)
+    html = BeautifulSoup(open(url), "html.parser") # TODO THIS NEEDS TO BE CHANGED FOR ONLINE HTML - REMOVE OPEN
+
+    links = []
+
+    for link in html.find_all('a', href=True):
+        if("http://nutrition.umd.edu/label.aspx?" in link['href']):
+            links.append(link)
+
+    return links
+
+def scrape_menu(url):
+
+    food_links = gather_links("This Week's Menus.htm") # TODO this function needs to gather menus by itself
+
+    for link in food_links:
+        print(scrape_recipe(link['href'], link.text)) # TODO add to data structure
+
+
+
+
+#scrape_recipe("http://nutrition.umd.edu/label.aspx?locationNum=16&locationName=%3cfont+style%3d%22color%3aRed%22%3eSouth+Campus%3c%2ffont%3e&dtdate=05%2f04%2f2018&RecNumAndPort=119369*1")
+
+scrape_menu("This Week's Menus.htm")
