@@ -1,4 +1,8 @@
 # DinerScraper
 
-Completely scrapes nutrition info for a single item
-    Formats data into structure as quantity + units
+Completely scrapes nutrition info for an entire menu
+ -Manually add menu url
+ 
+Formats data into dictionary
+
+Uploads to firebase database
