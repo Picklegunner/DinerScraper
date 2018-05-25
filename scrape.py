@@ -32,7 +32,7 @@ def is_good_response(resp):
             and content_type.find('html') > -1)
 
 #TODO create update_database that skims all available recipes and adds to sql database
-def scrape_recipe(url, name):
+def scrape_recipe(url, name, location):
 
     # Get html
     raw_html = simple_get(url)
@@ -79,7 +79,8 @@ def scrape_recipe(url, name):
         elif cal_search: # Calories
             scraped_entry.calories = cal_search.group(1)
 
-        scraped_entry.name = name
+    scraped_entry.name = name
+    scraped_entry.location = location
 
     return scraped_entry
 
@@ -102,16 +103,14 @@ def gather_links(url):
 
     return links
 
-def scrape_menu(url):
+
+def scrape_menu(url, location):
 
     food_links = gather_links("This Week's Menus.htm") # TODO this function needs to gather menus by itself
 
     for link in food_links:
-        print(scrape_recipe(link['href'], link.text)) # TODO add to data structure
+        print(scrape_recipe(link['href'], link.text, location)) # TODO add to data structure
 
-
-
-
-#scrape_recipe("http://nutrition.umd.edu/label.aspx?locationNum=16&locationName=%3cfont+style%3d%22color%3aRed%22%3eSouth+Campus%3c%2ffont%3e&dtdate=05%2f04%2f2018&RecNumAndPort=119369*1")
-
-scrape_menu("This Week's Menus.htm")
+# TODO properly obtain location
+# TODO load all 3 menus for all 3 locations
+scrape_menu("This Week's Menus.htm", "southCampus")
